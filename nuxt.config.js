@@ -110,8 +110,6 @@ export default {
     '@nuxtjs/eslint-module',
     // https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
-    // https://google-analytics.nuxtjs.org/
-    '@nuxtjs/google-analytics',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -122,7 +120,15 @@ export default {
     '@nuxtjs/pwa',
     // https://github.com/nuxt-community/i18n-module
     'nuxt-i18n',
+    // https://github.com/nuxt-community/gtm-module
+    '@nuxtjs/gtm',
   ],
+  /*
+   ** Google Tag Manager (GTM) config
+   */
+  gtm: {
+    id: process.env.GTM_ID || '',
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
@@ -160,10 +166,6 @@ export default {
       alwaysRedirect: true,
       fallbackLocale: 'en',
     },
-  },
-
-  googleAnalytics: {
-    id: process.env.GA_UID,
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
