@@ -18,7 +18,7 @@ export const options = {
 }
 
 export default {
-  target: process.env.nuxt_target || 'static',
+  target: process.env.NUXT_TARGET || 'static',
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'weather-app',
