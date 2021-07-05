@@ -1,13 +1,9 @@
-<template>
-
+<template lang="pug">
+  div
 </template>
 
 <script>
-export default {
-  name: "detail"
-};
+export default {}
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

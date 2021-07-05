@@ -1,19 +1,48 @@
 <template lang="pug">
-  div.location-card
-    h2.location-name
-      span.location-name__location-text Turkey
-      sup.location-name__country-code TR
-    div.location-temp
-      span.location-temp__temp_value 13
-      sup.location-temp__temp_unit °C
-    figure.location-temp__weather
-      img.location-temp__weather-icon(src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/01n.svg", alt="CLEAR SKY")
-      figcaption.location-temp__weather-text CLEAR SKY
+  div
+    div.location-card(v-if="location.weather")
+      h2.location-name
+        span.location-name__location-text {{location.name}}
+        sup.location-name__country-code {{ location.sys.country }}
+      div.location-temp
+        span.location-temp__temp_value {{ Math.round(location.main.temp) }}
+        sup.location-temp__temp_unit °C
+      figure.location-temp__weather
+        img.location-temp__weather-icon(:src="locationIcon", :alt="location.weather[0].description")
+        figcaption.location-temp__weather-text {{location.weather[0].description}}
+    div.location-card(v-else)
+      h2.location-name
+        span.location-name__location-text
+        sup.location-name__country-code
+      div.location-temp
+        span.location-temp__temp_value
+        sup.location-temp__temp_unit
+      figure.location-temp__weather
+        img.location-temp__weather-icon(src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/01n.svg", alt="CLEAR SKY")
+        figcaption.location-temp__weather-text CLEAR SKY
 </template>
 
 <script>
 export default {
   name: 'LocationCard',
+  props: {
+    location: {
+      type: Object,
+      required: true,
+    },
+  },
+  computed: {
+    locationIcon() {
+      if (this.location.weather) {
+        return `https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/${this.location.weather[0].icon}.svg`
+      }
+      return ''
+    },
+  },
+  mounted() {
+    // eslint-disable-next-line
+    console.log('*** thislocation ', this.location)
+  },
 }
 </script>
 
@@ -61,6 +90,11 @@ html.light .location-temp__weather-icon {
   &-name {
     margin: 0;
     &__location-text {
+      display: inline-flex;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 165px;
     }
     &__country-code {
       color: var(--primary-color);
@@ -69,7 +103,7 @@ html.light .location-temp__weather-icon {
       top: -1em;
       padding: 4px;
       margin-left: 4px;
-      border-radius: var(--input-radius);
+      border-radius: 8px;
     }
   }
   // location-temp
@@ -88,7 +122,10 @@ html.light .location-temp__weather-icon {
     margin: 10px 0;
     &-icon {
     }
-    &--text {
+    &-text {
+      margin-top: 5px;
+      text-transform: uppercase;
+      opacity: 0.81;
     }
   }
 }

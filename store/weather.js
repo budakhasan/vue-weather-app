@@ -11,7 +11,7 @@ export const actions = {
   },
 }
 
-export const mutation = {
+export const mutations = {
   SET_LANGUAGE(state, langCode) {
     state.language = langCode
   },

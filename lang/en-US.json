@@ -4,5 +4,6 @@
   "search_input_btn": "Submit",
   "choose_language": "Choose Language",
   "choose_accent": "Change Accent Color",
-  "change_theme": "Change Theme"
+  "change_theme": "Change Theme",
+  "search_city_not_found": "Please search a valid city"
 }

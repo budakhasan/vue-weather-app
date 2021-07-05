@@ -4,5 +4,6 @@
   "search_input_btn": "Ara",
   "choose_language": "Dil Seçimi",
   "choose_accent": "Renk Seçimi",
-  "change_theme": "Tema Seçimi"
+  "change_theme": "Tema Seçimi",
+  "search_city_not_found": "Lütfen geçerli bir şehir adı yazın"
 }

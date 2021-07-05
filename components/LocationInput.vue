@@ -1,18 +1,22 @@
 <template lang="pug">
-  div.location-input-container
-    input.location-input__search-input(
-      v-model="searchText",
-      type="search",
-      @keydown="searchByInput(true)"
-      @keydown.enter="searchByInput"
-      :placeholder="$t('search_input_placeholder')"
-    )
-    button.location-input__search-input-submit-btn(@click="searchByInput()")
-      | {{ $t('search_input_btn') }}
+  div
+    div.location-input-container
+      input.location-input__search-input(
+        v-model="searchText",
+        type="search",
+        @keydown="searchByInput(true)"
+        @keydown.enter="searchByInput"
+        :placeholder="$t('search_input_placeholder')"
+      )
+      button.location-input__search-input-submit-btn(@click="searchByInput()")
+        | {{ $t('search_input_btn') }}
+    p(v-if="notFound") {{ $t('search_city_not_found') }}
+    p(v-else-if="errorMsg") {{ errorMsg }}
+
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 import { getForecastByQuery } from '~/services/weather'
 
 export default {
@@ -21,11 +25,20 @@ export default {
     return {
       searchText: '',
       searchTimeout: null,
+      notFound: false,
+      errorMsg: '',
     }
   },
+  computed: {
+    ...mapState('weather', ['locations', 'language']),
+  },
   methods: {
-    ...mapMutations('ADD_LOCATION'),
+    resetSearchErrors() {
+      this.notFound = false
+      this.errorMsg = ''
+    },
     searchByInput(delay = false) {
+      this.resetSearchErrors()
       if (this.searchTimeout) clearTimeout(this.searchTimeout)
       if (this.searchText.length === 0) return
       if (delay) {
@@ -35,10 +48,19 @@ export default {
       this._search()
     },
     async _search() {
-      const response = await getForecastByQuery(this.searchText)
+      const response = await getForecastByQuery(this.searchText, this.language)
       // eslint-disable-next-line
       console.log(response)
       this.searchText = ''
+      if (response.cod === 404 || response.cod === '404') {
+        this.notFound = true
+        return
+      } else if (response.cod !== 200) {
+        this.errorMsg = response.message
+        return
+      }
+      if (!this.locations.find(({ id }) => id === response.id))
+        this.$store.commit('weather/ADD_LOCATION', response)
     },
   },
 }
@@ -55,6 +77,10 @@ export default {
 
   &__search-input {
     border-radius: var(--input-radius);
+    &-submit-btn {
+      border-radius: var(--input-radius);
+      margin-left: 3px;
+    }
   }
 
   &__btn-current-location {

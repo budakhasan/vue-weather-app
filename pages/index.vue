@@ -3,24 +3,40 @@
     div.container.w-list-search-wrapper
       LocationInput
     div.container.w-list-wrapper
-      LocationCard.w-list-wrapper__list-item
-      LocationCard.w-list-wrapper__list-item
-      LocationCard.w-list-wrapper__list-item
-      LocationCard.w-list-wrapper__list-item
+      LocationCard.w-list-wrapper__list-item(v-for="(location, i) in locations" :key="i", :location="location")
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { getForecastByQuery } from '~/services/weather'
+
 export default {
   layout: 'default',
-  data() {
-    return {}
+  computed: {
+    ...mapState('weather', ['locations', 'language']),
+  },
+  mounted() {
+    this.$store.commit('weather/SET_LANGUAGE', this.$i18n.locale)
+    if (this.locations.length === 0) {
+      this.loadDefaultCities()
+    }
   },
   methods: {
-    getLocation() {
-      // eslint-disable-next-line
-      console.log("*** getLocation fired", window.navigator)
-    }
-  }
+    loadDefaultCities() {
+      const defaultCites = [
+        'İstanbul',
+        'Ankara',
+        'New York',
+        'Berlin',
+        'Hong Kong',
+      ]
+      defaultCites.forEach((cityName) =>
+        getForecastByQuery(cityName, this.language).then((response) => {
+          this.$store.commit('weather/ADD_LOCATION', response)
+        })
+      )
+    },
+  },
 }
 </script>
 
@@ -32,11 +48,12 @@ export default {
   }
   // w-list-wrapper
   &-wrapper {
+    padding: 12px 4px;
     display: grid;
     grid-gap: 32px 20px;
     grid-template-columns: repeat(4, 1fr);
     &__list-item {
-      margin: .5rem
+      margin: 0.5rem;
     }
   }
 }
