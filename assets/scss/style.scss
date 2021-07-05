@@ -23,11 +23,17 @@ button {
   border-style: none;
   cursor: pointer;
   font-size: 0.875rem;
+
+  &[disabled] {
+    color: var(--primary-dark-color)
+  }
+
+  &--transparent {
+    background-color: transparent;
+  }
 }
 
-.btn--transparent {
-  background-color: transparent;
-}
+
 
 input {
   display: flex;

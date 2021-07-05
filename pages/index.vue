@@ -7,33 +7,40 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { getForecastByQuery } from '~/services/weather'
 
 export default {
   layout: 'default',
   computed: {
-    ...mapState('weather', ['locations', 'language']),
+    ...mapState({
+      locations: (state) => state.weather.locations,
+      language: (state) => state.settings.language,
+    }),
   },
-  mounted() {
-    this.$store.commit('weather/SET_LANGUAGE', this.$i18n.locale)
+  async mounted() {
+    await this.loadLocaleStorage()
     if (this.locations.length === 0) {
       this.loadDefaultCities()
     }
   },
   methods: {
+    ...mapActions('weather', ['loadLocaleStorage']),
+    ...mapActions('settings', ['setLang', 'loadSettingsFromLocaleStorage']),
     loadDefaultCities() {
       const defaultCites = [
-        'İstanbul',
-        'Ankara',
-        'New York',
+        'Seattle',
         'Berlin',
         'Hong Kong',
+        'İstanbul',
+        'Ankara',
       ]
       defaultCites.forEach((cityName) =>
-        getForecastByQuery(cityName, this.language).then((response) => {
-          this.$store.commit('weather/ADD_LOCATION', response)
-        })
+        getForecastByQuery(cityName, this.language || this.$i18n.locale).then(
+          (response) => {
+            this.$store.commit('weather/ADD_LOCATION', response)
+          }
+        )
       )
     },
   },

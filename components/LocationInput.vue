@@ -8,8 +8,8 @@
         @keydown.enter="searchByInput"
         :placeholder="$t('search_input_placeholder')"
       )
-      button.location-input__search-input-submit-btn(@click="searchByInput()")
-        | {{ $t('search_input_btn') }}
+      button.location-input__search-input-submit-btn(@click="searchByInput()" :disabled="!!isLoading")
+        span {{ isLoading ? $t('btn_is_loading') : $t('search_input_btn') }}
     p(v-if="notFound") {{ $t('search_city_not_found') }}
     p(v-else-if="errorMsg") {{ errorMsg }}
 
@@ -23,14 +23,18 @@ export default {
   name: 'LocationInput',
   data() {
     return {
-      searchText: '',
-      searchTimeout: null,
+      isLoading: false,
       notFound: false,
+      searchTimeout: null,
+      searchText: '',
       errorMsg: '',
     }
   },
   computed: {
-    ...mapState('weather', ['locations', 'language']),
+    ...mapState({
+      locations: (state) => state.weather.locations,
+      language: (state) => state.settings.language,
+    }),
   },
   methods: {
     resetSearchErrors() {
@@ -38,20 +42,24 @@ export default {
       this.errorMsg = ''
     },
     searchByInput(delay = false) {
+      if (this.isLoading) return
       this.resetSearchErrors()
       if (this.searchTimeout) clearTimeout(this.searchTimeout)
       if (this.searchText.length === 0) return
       if (delay) {
-        this.searchTimeout = setTimeout(this._search, 500)
+        this.searchTimeout = setTimeout(this._search, 750)
         return
       }
       this._search()
     },
     async _search() {
+      this.isLoading = true
       const response = await getForecastByQuery(this.searchText, this.language)
-      // eslint-disable-next-line
-      console.log(response)
+      // set loading to disable next fetch
+      this.isLoading = false
+      // clear search text after server-response
       this.searchText = ''
+      // check if city/state is exists
       if (response.cod === 404 || response.cod === '404') {
         this.notFound = true
         return

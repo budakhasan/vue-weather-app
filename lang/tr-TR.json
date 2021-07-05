@@ -5,5 +5,6 @@
   "choose_language": "Dil Seçimi",
   "choose_accent": "Renk Seçimi",
   "change_theme": "Tema Seçimi",
-  "search_city_not_found": "Lütfen geçerli bir şehir adı yazın"
+  "search_city_not_found": "Lütfen geçerli bir şehir adı yazın",
+  "btn_is_loading": "Yükleniyor..."
 }

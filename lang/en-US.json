@@ -5,5 +5,6 @@
   "choose_language": "Choose Language",
   "choose_accent": "Change Accent Color",
   "change_theme": "Change Theme",
-  "search_city_not_found": "Please search a valid city"
+  "search_city_not_found": "Please search a valid city",
+  "btn_is_loading": "Loading..."
 }

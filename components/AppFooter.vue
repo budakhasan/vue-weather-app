@@ -1,8 +1,10 @@
 <template lang="pug">
   footer.app-footer
+    // theme changer
     button.app-footer-item-wrapper.app-footer__btn(v-tooltip="$t('change_theme')", @click="changeTheme()")
         i.material-icons
           | {{ activeTheme === 'light' ? 'light_mode' : 'dark_mode' }}
+    // accent-color picker
     v-popover.app-footer-item-wrapper.accent-selector
       button.app-footer__btn(v-tooltip="$t('choose_accent')")
         span.accent-selector__current
@@ -16,7 +18,7 @@
             :class="`accent-selector__selectable-color--${color}`"
           )
           | {{ color }}
-
+    // longuage selector
     v-popover.app-footer-item-wrapper.app-footer__lang-selector
       button.app-footer__btn(v-tooltip="$t('choose_language')")
         i.app-footer__btn-icon.material-icons translate
@@ -25,6 +27,7 @@
         div.available-lang-list__lang(
           v-for="locale in availableLocales"
           :key="locale.code"
+          @click="langCode = locale.code"
         )
           nuxt-link(:to="switchLocalePath(locale.code)")
             button.app-footer__btn.app-footer__btn-locale-btn(v-close-popover)
@@ -32,15 +35,38 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   name: 'AppFooter',
-  data() {
-    return {
-      activeTheme: '',
-      accentColor: 'green',
-    }
-  },
   computed: {
+    langCode: {
+      get() {
+        return this.$store.state.settings.language
+      },
+      set(langCode) {
+        this.$store.commit('settings/SET_LANGUAGE', langCode)
+        this.updateStorage()
+      },
+    },
+    activeTheme: {
+      get() {
+        return this.$store.state.settings.activeTheme || 'dark'
+      },
+      set(themeKey) {
+        this.$store.commit('settings/SET_ACTIVE_THEME', themeKey)
+        this.updateStorage()
+      },
+    },
+    accentColor: {
+      get() {
+        return this.$store.state.settings.accentColor || 'purple'
+      },
+      set(themeKey) {
+        this.$store.commit('settings/SET_ACCENT_COLOR', themeKey)
+        this.updateStorage()
+      },
+    },
     availableLocales() {
       return this.$i18n.locales.filter(({ code }) => code !== this.$i18n.locale)
     },
@@ -62,7 +88,16 @@ export default {
       ]
     },
   },
+  beforeMount() {
+    this.setLang(this.$i18n.locale)
+    this.loadSettingsFromLocaleStorage()
+  },
   methods: {
+    ...mapActions('settings', [
+      'setLang',
+      'loadSettingsFromLocaleStorage',
+      'updateStorage',
+    ]),
     changeTheme() {
       const htmlElement = document.querySelector('html')
       if (this.activeTheme) htmlElement.classList.remove(this.activeTheme)
@@ -105,7 +140,7 @@ export default {
     }
 
     &-locale-btn {
-      flex: 1 1 0%;
+      flex: 1 1 0;
       margin: 0;
       padding: 0.5rem;
       justify-content: flex-start;

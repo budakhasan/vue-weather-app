@@ -1,25 +1,14 @@
 <template lang="pug">
-  div
-    div.location-card(v-if="location.weather")
-      h2.location-name
-        span.location-name__location-text {{location.name}}
-        sup.location-name__country-code {{ location.sys.country }}
-      div.location-temp
-        span.location-temp__temp_value {{ Math.round(location.main.temp) }}
-        sup.location-temp__temp_unit °C
-      figure.location-temp__weather
-        img.location-temp__weather-icon(:src="locationIcon", :alt="location.weather[0].description")
-        figcaption.location-temp__weather-text {{location.weather[0].description}}
-    div.location-card(v-else)
-      h2.location-name
-        span.location-name__location-text
-        sup.location-name__country-code
-      div.location-temp
-        span.location-temp__temp_value
-        sup.location-temp__temp_unit
-      figure.location-temp__weather
-        img.location-temp__weather-icon(src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/01n.svg", alt="CLEAR SKY")
-        figcaption.location-temp__weather-text CLEAR SKY
+  div.location-card(v-if="location.weather")
+    h2.location-name
+      span.location-name__location-text {{location.name}}
+      sup.location-name__country-code {{ location.sys.country }}
+    div.location-temp
+      span.location-temp__temp_value {{ Math.round(location.main.temp) }}
+      sup.location-temp__temp_unit °C
+    figure.location-temp__weather
+      img.location-temp__weather-icon(:src="locationIcon", :alt="location.weather[0].description")
+      figcaption.location-temp__weather-text {{location.weather[0].description}}
 </template>
 
 <script>
