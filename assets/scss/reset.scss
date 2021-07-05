@@ -1,0 +1,28 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a,
+a:hover,
+a:visited {
+  color: #a2a0ff;
+  text-decoration: none;
+}
