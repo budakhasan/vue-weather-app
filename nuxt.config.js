@@ -18,6 +18,7 @@ export const options = {
 }
 
 export default {
+  target: process.env.nuxt_target || 'static',
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'weather-app',
@@ -109,6 +110,8 @@ export default {
     '@nuxtjs/eslint-module',
     // https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
+    // https://google-analytics.nuxtjs.org/
+    '@nuxtjs/google-analytics',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -157,6 +160,10 @@ export default {
       alwaysRedirect: true,
       fallbackLocale: 'en',
     },
+  },
+
+  googleAnalytics: {
+    id: process.env.GA_UID,
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
